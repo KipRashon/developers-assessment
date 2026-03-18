@@ -16,8 +16,12 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
+import { Route as LayoutPaymentsRouteImport } from './routes/_layout/payments'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
+import { Route as LayoutPaymentsIndexRouteImport } from './routes/_layout/payments/index'
+import { Route as LayoutPaymentsReviewBatchIdRouteImport } from './routes/_layout/payments/review.$batchId'
+import { Route as LayoutPaymentsConfirmationBatchIdRouteImport } from './routes/_layout/payments/confirmation.$batchId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -53,6 +57,11 @@ const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutPaymentsRoute = LayoutPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutItemsRoute = LayoutItemsRouteImport.update({
   id: '/items',
   path: '/items',
@@ -63,6 +72,23 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutPaymentsIndexRoute = LayoutPaymentsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LayoutPaymentsRoute,
+} as any)
+const LayoutPaymentsReviewBatchIdRoute =
+  LayoutPaymentsReviewBatchIdRouteImport.update({
+    id: '/review/$batchId',
+    path: '/review/$batchId',
+    getParentRoute: () => LayoutPaymentsRoute,
+  } as any)
+const LayoutPaymentsConfirmationBatchIdRoute =
+  LayoutPaymentsConfirmationBatchIdRouteImport.update({
+    id: '/confirmation/$batchId',
+    path: '/confirmation/$batchId',
+    getParentRoute: () => LayoutPaymentsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
@@ -71,8 +97,12 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
   '/items': typeof LayoutItemsRoute
+  '/payments': typeof LayoutPaymentsRouteWithChildren
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
+  '/payments/': typeof LayoutPaymentsIndexRoute
+  '/payments/confirmation/$batchId': typeof LayoutPaymentsConfirmationBatchIdRoute
+  '/payments/review/$batchId': typeof LayoutPaymentsReviewBatchIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -83,6 +113,9 @@ export interface FileRoutesByTo {
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
+  '/payments': typeof LayoutPaymentsIndexRoute
+  '/payments/confirmation/$batchId': typeof LayoutPaymentsConfirmationBatchIdRoute
+  '/payments/review/$batchId': typeof LayoutPaymentsReviewBatchIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -93,8 +126,12 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_layout/admin': typeof LayoutAdminRoute
   '/_layout/items': typeof LayoutItemsRoute
+  '/_layout/payments': typeof LayoutPaymentsRouteWithChildren
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/payments/': typeof LayoutPaymentsIndexRoute
+  '/_layout/payments/confirmation/$batchId': typeof LayoutPaymentsConfirmationBatchIdRoute
+  '/_layout/payments/review/$batchId': typeof LayoutPaymentsReviewBatchIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -105,8 +142,12 @@ export interface FileRouteTypes {
     | '/signup'
     | '/admin'
     | '/items'
+    | '/payments'
     | '/settings'
     | '/'
+    | '/payments/'
+    | '/payments/confirmation/$batchId'
+    | '/payments/review/$batchId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -117,6 +158,9 @@ export interface FileRouteTypes {
     | '/items'
     | '/settings'
     | '/'
+    | '/payments'
+    | '/payments/confirmation/$batchId'
+    | '/payments/review/$batchId'
   id:
     | '__root__'
     | '/_layout'
@@ -126,8 +170,12 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_layout/admin'
     | '/_layout/items'
+    | '/_layout/payments'
     | '/_layout/settings'
     | '/_layout/'
+    | '/_layout/payments/'
+    | '/_layout/payments/confirmation/$batchId'
+    | '/_layout/payments/review/$batchId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -189,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutSettingsRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/payments': {
+      id: '/_layout/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof LayoutPaymentsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/items': {
       id: '/_layout/items'
       path: '/items'
@@ -203,12 +258,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/payments/': {
+      id: '/_layout/payments/'
+      path: '/'
+      fullPath: '/payments/'
+      preLoaderRoute: typeof LayoutPaymentsIndexRouteImport
+      parentRoute: typeof LayoutPaymentsRoute
+    }
+    '/_layout/payments/review/$batchId': {
+      id: '/_layout/payments/review/$batchId'
+      path: '/review/$batchId'
+      fullPath: '/payments/review/$batchId'
+      preLoaderRoute: typeof LayoutPaymentsReviewBatchIdRouteImport
+      parentRoute: typeof LayoutPaymentsRoute
+    }
+    '/_layout/payments/confirmation/$batchId': {
+      id: '/_layout/payments/confirmation/$batchId'
+      path: '/confirmation/$batchId'
+      fullPath: '/payments/confirmation/$batchId'
+      preLoaderRoute: typeof LayoutPaymentsConfirmationBatchIdRouteImport
+      parentRoute: typeof LayoutPaymentsRoute
+    }
   }
 }
+
+interface LayoutPaymentsRouteChildren {
+  LayoutPaymentsIndexRoute: typeof LayoutPaymentsIndexRoute
+  LayoutPaymentsConfirmationBatchIdRoute: typeof LayoutPaymentsConfirmationBatchIdRoute
+  LayoutPaymentsReviewBatchIdRoute: typeof LayoutPaymentsReviewBatchIdRoute
+}
+
+const LayoutPaymentsRouteChildren: LayoutPaymentsRouteChildren = {
+  LayoutPaymentsIndexRoute: LayoutPaymentsIndexRoute,
+  LayoutPaymentsConfirmationBatchIdRoute:
+    LayoutPaymentsConfirmationBatchIdRoute,
+  LayoutPaymentsReviewBatchIdRoute: LayoutPaymentsReviewBatchIdRoute,
+}
+
+const LayoutPaymentsRouteWithChildren = LayoutPaymentsRoute._addFileChildren(
+  LayoutPaymentsRouteChildren,
+)
 
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
+  LayoutPaymentsRoute: typeof LayoutPaymentsRouteWithChildren
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
@@ -216,6 +310,7 @@ interface LayoutRouteChildren {
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
   LayoutItemsRoute: LayoutItemsRoute,
+  LayoutPaymentsRoute: LayoutPaymentsRouteWithChildren,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
